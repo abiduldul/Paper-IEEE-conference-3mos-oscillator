@@ -1,54 +1,69 @@
 \relax 
-\citation{razavi_book}
-\citation{nugroho2012cco,pokharel2011quadrature}
-\citation{nugroho2012cco}
+\citation{razavi_analog,maneatis_dll}
+\citation{lee_cmos,pokharel_quadrature}
+\citation{nugroho_ring,maneatis_coupled}
+\citation{hajimiri_ring}
+\citation{razavi_analog}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Transistor Dimensions}}{1}{}\protected@file@percent }
-\newlabel{tab:sizing}{{I}{1}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {II}Circuit Architecture}{1}{}\protected@file@percent }
-\newlabel{sec:arch}{{II}{1}{}{}{}}
-\newlabel{eq:freq}{{1}{1}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Custom physical-design and parasitic-aware verification flow used in this work.}}{2}{}\protected@file@percent }
-\newlabel{fig:flow}{{1}{2}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {III}Design and Verification Methodology}{2}{}\protected@file@percent }
-\newlabel{sec:flow}{{III}{2}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Layout}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Functional Design-Rule Check (DRC)}{2}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Layout of the three-stage CMOS ring oscillator core (8.6~$\mu $m $\times $ 8.6~$\mu $m). The upper row contains the three PMOS devices and the lower row the three NMOS devices; the inter-stage nets and the output are routed between them.}}{2}{}\protected@file@percent }
-\newlabel{fig:layout}{{2}{2}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Extracted Per-Net Parasitic Capacitance}}{2}{}\protected@file@percent }
-\newlabel{tab:parasitics}{{II}{2}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Layout-versus-Schematic (LVS)}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Parasitic RC Extraction}{2}{}\protected@file@percent }
-\citation{nugroho2012cco}
-\citation{nugroho2012cco}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Post-layout (RC-extracted) transient output waveform. The two markers at $137.77$~ps and $291.61$~ps yield a period of $153.84$~ps, i.e. an oscillation frequency of $6.50$~GHz.}}{3}{}\protected@file@percent }
-\newlabel{fig:wave_rc}{{3}{3}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Post-Layout Simulation Results}{3}{}\protected@file@percent }
-\newlabel{sec:results}{{IV}{3}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Phase Noise and Figure of Merit}{3}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Summary of Post-Layout (RC) Performance}}{3}{}\protected@file@percent }
-\newlabel{tab:results}{{III}{3}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Post-layout (RC-extracted) single-sideband phase noise versus offset frequency. The marker indicates $-77.6$~dBc/Hz at a $1$~MHz offset.}}{3}{}\protected@file@percent }
-\newlabel{fig:pnoise}{{4}{3}{}{}{}}
-\newlabel{eq:fom}{{5}{3}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Discussion}{3}{}\protected@file@percent }
-\citation{nugroho2012cco}
-\bibcite{razavi_book}{1}
+\citation{razavi_analog}
+\citation{lee_cmos}
+\citation{razavi_rf}
+\citation{razavi_analog}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Analytical Modeling \& Circuit Architecture}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Loop Dynamics and Startup Criteria}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Short-Channel Propagation Delay Derivation}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Idealized Pre-Layout Performance Baseline}{2}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Schematic capture of the verified three-stage static CMOS ring oscillator loop.}}{2}{}\protected@file@percent }
+\newlabel{fig:schematic_capture}{{1}{2}{}{}{}}
+\citation{razavi_rf}
+\citation{razavi_analog}
+\citation{razavi_rf}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Transistor Dimensions of the Three-Stage Ring Oscillator Core}}{3}{}\protected@file@percent }
+\newlabel{tab:transistor_sizing}{{I}{3}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Physical Design \& Custom Layout Methodology}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Custom physical-design and parasitic-aware verification flow framework implemented in this work.}}{3}{}\protected@file@percent }
+\newlabel{fig:methodology_flow}{{2}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Device Sizing and Symmetrical Matching Strategy}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Floorplanning and Interconnect Routing Topology}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Manually routed layout core showing row-aligned PMOS and NMOS device matching ($8.6\text  { }\mu \text  {m} \times 8.6\text  { }\mu \text  {m}$).}}{3}{}\protected@file@percent }
+\newlabel{fig:layout_core}{{3}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Physical Verification: Design Rule Checking (DRC)}{3}{}\protected@file@percent }
+\citation{razavi_rf}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Layout-Versus-Schematic (LVS) Verification}{4}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Extracted Per-Net Parasitic Capacitance Matrix from DSPF}}{4}{}\protected@file@percent }
+\newlabel{tab:parasitic_capacitance}{{II}{4}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Parasitic-Aware Extraction \& Simulation Convergence Challenges}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Resistor-Capacitor (RC) Netlist Extraction Matrix}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}The Periodic Steady-State (PSS) Convergence Solution}{4}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Idealized pre-layout (schematic-level) transient output waveform demonstrating an unextracted oscillation frequency of $11.15\text  { GHz}$ ($T = 89.71\text  { ps}$).}}{4}{}\protected@file@percent }
+\newlabel{fig:sch_sim_wave}{{4}{4}{}{}{}}
+\citation{hajimiri_theory,razavi_phase}
+\citation{lee_tutorial}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Post-Layout Simulation Results}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Post-Layout Transient Performance Profile}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Post-layout (RC-extracted) transient output waveform showing stable rail-to-rail oscillation at $6.50\text  { GHz}$ with a period of $153.84\text  { ps}$.}}{5}{}\protected@file@percent }
+\newlabel{fig:layout_sim_wave}{{5}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Pre- vs. Post-Layout Performance Degradation Analysis}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Spectral Purity and Figure of Merit Evaluation}{5}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Post-layout (RC-extracted) single-sideband phase noise versus relative offset frequency, showing $-77.6\text  { dBc/Hz}$ at a $1\text  { MHz}$ offset.}}{5}{}\protected@file@percent }
+\newlabel{fig:pnoise_plot}{{6}{5}{}{}{}}
+\citation{nugroho_ring,pokharel_quadrature}
+\citation{edge_injection_ref13}
+\citation{vco_65nm_ref14}
+\bibcite{razavi_analog}{1}
 \bibcite{razavi_rf}{2}
-\bibcite{lee_book}{3}
-\bibcite{maneatis1996}{4}
-\bibcite{maneatis1993}{5}
-\bibcite{hajimiri1998}{6}
-\bibcite{hajimiri1999}{7}
-\bibcite{lee2000}{8}
-\bibcite{razavi_phasenoise}{9}
-\bibcite{nugroho2012cco}{10}
-\bibcite{pokharel2011quadrature}{11}
-\bibcite{ro_45nm_2024}{12}
-\bibcite{ildcro2023}{13}
-\bibcite{ringvco_5g_2024}{14}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Conclusion}{4}{}\protected@file@percent }
-\newlabel{sec:conclusion}{{V}{4}{}{}{}}
-\@writefile{toc}{\contentsline {section}{References}{4}{}\protected@file@percent }
-\gdef \@abspage@last{4}
+\bibcite{lee_cmos}{3}
+\bibcite{maneatis_dll}{4}
+\bibcite{maneatis_coupled}{5}
+\bibcite{hajimiri_theory}{6}
+\bibcite{hajimiri_ring}{7}
+\bibcite{lee_tutorial}{8}
+\bibcite{razavi_phase}{9}
+\bibcite{nugroho_ring}{10}
+\bibcite{pokharel_quadrature}{11}
+\bibcite{edge_injection_ref13}{12}
+\bibcite{vco_65nm_ref14}{13}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Qualitative Context with Prior Art}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusion}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{6}{}\protected@file@percent }
+\gdef \@abspage@last{6}
