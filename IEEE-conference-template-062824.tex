@@ -1,4 +1,6 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[conference,a4paper]{IEEEtran} %enable this for camera ready (by ABJ)
+% \documentclass[conference,peerreview,a4paper]{IEEEtran} %enable this for peer review (by ABJ)
+
 \IEEEoverridecommandlockouts
 
 % ---- packages ----
@@ -11,36 +13,28 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{booktabs}
-\usepackage{array} 
+\usepackage{array}
 \usepackage{url}
 
-% ---- helper macro to highlight things you still need to fill in ----
-\newcommand{\TODO}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 % --- Advanced Spacing Optimizations ---
-\usepackage{microtype} % Optimizes word spacing/hyphenation to pull up trailing lines
-
-\setlength{\textfloatsep}{6pt plus 1pt minus 1pt}  
-\setlength{\intextsep}{6pt plus 1pt minus 1pt}     
-\setlength{\floatsep}{5pt plus 1pt minus 1pt}      
-
+\usepackage{microtype}
+\setlength{\textfloatsep}{6pt plus 1pt minus 1pt}
+\setlength{\intextsep}{6pt plus 1pt minus 1pt}
+\setlength{\floatsep}{5pt plus 1pt minus 1pt}
 \setlength{\abovedisplayskip}{3pt}
 \setlength{\belowdisplayskip}{3pt}
 \setlength{\abovedisplayshortskip}{2pt}
 \setlength{\belowdisplayshortskip}{2pt}
 
-% \addtolength{\textheight}{0.15in} 
-% \linespread{0.97} 
-
-
 \begin{document}
 
-\title{A 6.5 GHz, 286 µW Three-Stage CMOS Ring Oscillator in 65 nm Low-Power CMOS with Full Post-Layout Extraction}
+\title{A Comprehensive Parasitic-Aware Post-Layout Design and Verification Methodology for a 6.5-GHz Ultra-Low-Power Ring Oscillator in 65-nm CMOS}
 
-\author{\IEEEauthorblockN{1\textsuperscript{st} Abidul Qohar}
+\author{\IEEEauthorblockN{Abidul Qohar}
 \IEEEauthorblockA{\textit{Department of Electrical Engineering} \\
 \textit{and Information Technology} \\
 \textit{Faculty of Engineering}\\
@@ -48,468 +42,611 @@
 Yogyakarta, Indonesia \\
 abidulqohar@mail.ugm.ac.id}
 \and
-\IEEEauthorblockN{2\textsuperscript{nd} Prapto Nugroho}
+\IEEEauthorblockN{Prapto Nugroho}
 \IEEEauthorblockA{\textit{Department of Electrical Engineering} \\
 \textit{and Information Technology} \\
 \textit{Faculty of Engineering}\\
 \textit{Universitas Gadjah Mada} \\
 Yogyakarta, Indonesia \\
-tatok@ugm.ac.id}
-% \and
-% \IEEEauthorblockN{3\textsuperscript{rd} Agus Bejo}
-% \IEEEauthorblockA{\textit{Department of Electrical Engineering} \\
-% \textit{and Information Technology} \\
-% \textit{Faculty of Engineering}\\
-% \textit{Universitas Gadjah Mada} \\
-% Yogyakarta, Indonesia \\
-% agusbj@ugm.ac.id} 
+*tatok@ugm.ac.id}
+\and
+\IEEEauthorblockN{Dzuhri Radityo Utomo}
+\IEEEauthorblockA{\textit{Department of Electrical Engineering} \\
+\textit{and Information Technology} \\
+\textit{Faculty of Engineering}\\
+\textit{Universitas Gadjah Mada} \\
+Yogyakarta, Indonesia \\
+dzuhri.r.u@ugm.ac.id}
+\and[\\\mbox{}\hfill]
+\IEEEauthorblockN{Agus Bejo}
+\IEEEauthorblockA{\textit{Department of Electrical Engineering} \\
+\textit{and Information Technology} \\
+\textit{Faculty of Engineering}\\
+\textit{Universitas Gadjah Mada} \\
+Yogyakarta, Indonesia \\
+agusbj@ugm.ac.id}
+\and[\hspace{3em}]
+\IEEEauthorblockN{Eka Firmansyah}
+\IEEEauthorblockA{\textit{Department of Electrical Engineering} \\
+\textit{and Information Technology} \\
+\textit{Faculty of Engineering}\\
+\textit{Universitas Gadjah Mada} \\
+Yogyakarta, Indonesia \\
+eka.firmansyah@ugm.ac.id}
 }
-
-\maketitle
-
+\maketitle %enable this for camera ready (by ABJ)
+% \IEEEpeerreviewmaketitle %enable this for peer reveiw (by ABJ)
 
 \begin{abstract}
-This paper details the complete custom physical implementation, rigorous
-verification, and back-end parasitic extraction of a low-power, high-frequency
-three-stage CMOS ring oscillator designed and laid out in a 65~nm Low-Power
-(LP) CMOS process. Operating under a nominal 1.0~V supply rail, the
-active core layout is manually optimized using row-based floorplanning to occupy
-a compact footprint of only $73.96~\mu\text{m}^2$. Rather than relying on
-idealized, unextracted schematic-level models, this work quantifies the
-performance degradation imposed by back-end-of-line (BEOL)
-interconnect parasitics in multi-gigahertz clocking networks. Following clean
-Design Rule Checking (DRC) and Layout-Versus-Schematic (LVS) matching, a
-comprehensive resistor-capacitor (RC) network extraction was performed in
-Detailed Standard Parasitic Format (DSPF). Post-layout periodic steady-state
-(PSS) and periodic noise (\texttt{pnoise}) simulation matrices reveal that
-distributed interconnect parasitics introduce a 41.7\% reduction in loop
-operating frequency, shifting the carrier baseline from an unextracted schematic
-value of 11.15~GHz down to a physical limit of 6.50~GHz. At its 6.50~GHz
-steady-state operating point, the extracted netlist draws an average current of
-only $286.3~\mu\text{A}$, limiting total dynamic power dissipation to
-286.3~$\mu$W. Spectral purity analysis indicates a single-sideband
-phase noise floor of $-77.6$~dBc/Hz at a 1~MHz relative frequency offset,
-yielding a normalized Figure of Merit (FoM) of
-$-159.3$~dBc/Hz. To bypass post-layout simulation non-convergence issues caused
-by the complex distributed netlist, a practical workaround is documented by
-re-engineering the external test boundaries to match a high-impedance
-1~M$\Omega$ termination floor. Overall, the results of this study
-indicate that a fully verified, parasitic-aware post-layout
-framework is important for accurately synthesizing and evaluating
-sub-100~nm clock distribution sub-blocks.
+This paper presents a comprehensive parasitic-aware post-layout design and
+verification methodology for a low-power three-stage CMOS ring oscillator
+implemented in a 65-nm Low-Power (LP) CMOS process. Operating from a 1.0-V
+supply, the oscillator is physically implemented using custom layout techniques
+with a compact active area of $73.96~\mu\text{m}^2$. Unlike conventional
+schematic-level evaluations, the proposed framework incorporates detailed
+back-end-of-line (BEOL) parasitic extraction to assess the impact of
+interconnect effects on high-frequency operation. Following successful design
+rule checking (DRC), layout-versus-schematic (LVS) verification, and detailed
+standard parasitic format (DSPF) extraction, post-layout periodic steady-state
+(PSS) and periodic noise (\texttt{pnoise}) analyses are performed to
+characterize the oscillator under realistic conditions. The extracted design
+achieves a stable oscillation frequency of 6.50~GHz while consuming only
+$286.3~\mu$W from a 1.0-V supply. The simulated single-sideband phase noise is
+$-77.6$~dBc/Hz at a 1-MHz offset, corresponding to a figure of merit (FoM) of
+$-159.3$~dBc/Hz. The comparison between schematic and post-layout simulations
+highlights the significant influence of distributed interconnect parasitics on
+oscillator performance, emphasizing the importance of parasitic-aware physical
+verification in nanoscale CMOS circuits. The proposed methodology provides a
+practical framework for the accurate design and evaluation of low-power,
+high-frequency oscillator blocks in advanced CMOS technologies.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Ring oscillator, CMOS, 65~nm, physical design, DRC, LVS, parasitic extraction, post-layout simulation, phase noise, DSPF.
+Ring oscillator, CMOS, post-layout verification, parasitic extraction, DSPF, phase noise, low-power design.
 \end{IEEEkeywords}
 
 \section{Introduction}
-Modern ultra-large-scale integration (ULSI) transceivers and advanced
-system-on-chip (SoC) architectures require highly area- and power-efficient
-clock generation blocks, such as phase-locked loops (PLLs) and clock-and-data
-recovery (CDR) subsystems \cite{razavi_analog, maneatis_dll}. Compared to
-area-intensive LC-tank topologies that necessitate thick-metal analog passives,
-inductorless ring oscillators offer a minimal silicon footprint, wide frequency
-tuning ranges, and seamless portability across standard digital CMOS nodes
-\cite{lee_cmos, pokharel_quadrature}. Among scalable ring-based configurations,
-the three-stage inverter feedback loop remains a structural benchmark due to its
-robust startup conditions, straightforward matching, and multi-phase output
-availability \cite{nugroho_ring, maneatis_coupled}.
+Oscillators are essential building blocks in modern integrated circuits and are
+widely used in phase-locked loops (PLLs), clock-and-data recovery (CDR)
+circuits, and other timing systems~\cite{maneatis_dll}. Among various oscillator
+topologies, ring oscillators are attractive because they occupy a small silicon
+area, do not require inductors, and can be readily implemented in standard CMOS
+processes~\cite{razavi_analog, lee_cmos}. In particular, the three-stage ring
+oscillator offers a simple structure and naturally provides multiple phase
+outputs, making it suitable for many high-speed
+applications~\cite{maneatis_coupled, nugroho_ring}.
 
-However, in nanometer domains like the 65~nm node utilized here, asserting
-system validity solely from unextracted schematic models creates design risks.
-As device dimensions scale down, intrinsic transistor capacitances drop sharply,
-causing back-end-of-line (BEOL) interconnect parasitics to dominate the net node
-admittance matrix \cite{hajimiri_ring}. At multi-gigahertz frequencies, routing
-tracks introduce distributed parasitic resistances ($R_{\text{para}}$) and
-capacitances ($C_{\text{para}}$) that form unwanted RC low-pass networks. These
-networks inject additional phase shift into the feedback path, degrading loop
-phase margins and pulling the physical operating frequency away from design
-targets. Integrating blocks based on schematic-only metrics can therefore cause
-timing mismatches.
+As CMOS technology scales into the nanometer regime, however, maintaining the
+accuracy of circuit performance prediction becomes increasingly challenging.
+During the early design stage, circuit performance is commonly evaluated using
+schematic-level simulations. While this approach is useful for initial design
+exploration, it does not account for parasitic elements introduced during
+physical implementation. At multi-gigahertz frequencies, interconnect
+resistances and capacitances in the back-end-of-line (BEOL) layers can no longer
+be neglected. These parasitic components increase signal propagation delay and
+may cause the actual oscillation frequency to deviate from the intended design
+value~\cite{hajimiri_ring}.
 
-This work addresses this modeling gap by executing the step-by-step physical
-realization of a 6.5~GHz three-stage ring oscillator and explicitly isolating
-the degradation penalty imposed by layout routing. The core contributions are:
+For this reason, post-layout verification plays an important role in
+high-frequency circuit design. Although many studies have reported the
+performance of CMOS ring oscillators, most discussions focus on transistor-level
+simulations, while the influence of layout parasitics is often treated only
+briefly. As technology nodes continue to shrink, understanding the difference
+between schematic and post-layout performance becomes increasingly important for
+obtaining reliable circuit behavior.
+
+In this work, a low-power three-stage ring oscillator is implemented in a 65-nm
+Low-Power (LP) CMOS process and evaluated using a complete post-layout design
+flow. After layout generation, the circuit is verified through design rule
+checking (DRC) and layout-versus-schematic (LVS) procedures, followed by RC
+parasitic extraction in Detailed Standard Parasitic Format (DSPF). The extracted
+netlist is then analyzed using periodic steady-state (PSS) and periodic noise
+(\texttt{pnoise}) simulations to characterize the oscillator under realistic
+operating conditions.
+
+The main contributions of this paper are summarized as follows:
 \begin{itemize}
-\item \text{Custom Layout Optimization:} A manually drawn layout grouping
-row-based PMOS and NMOS arrays into a compact footprint of
-$73.96~\mu\text{m}^2$.
-\item \text{Pre- vs. Post-Layout Quantification:} A rigorous comparative study
-detailing a 41.7\% frequency reduction (from 11.15~GHz down to 6.50~GHz) and a
-71.2\% inflation in single-stage propagation delay.
-\item \text{CAD Convergence Workarounds:} A documented solution for periodic
-steady-state (PSS) convergence failures introduced by dense extracted subcircuit
-formatting.
+\item A complete physical design and post-layout verification flow for a
+three-stage CMOS ring oscillator in a 65-nm LP CMOS technology.
+\item A comparison between schematic-level and extracted-netlist simulations to
+evaluate the effect of BEOL interconnect parasitics on oscillation frequency and
+propagation delay.
+\item Post-layout characterization of a compact 6.5-GHz ring oscillator with a
+power consumption of $286.3~\mu$W, including phase-noise and figure-of-merit
+analysis.
 \end{itemize}
 
-\section{Analytical Modeling \& Circuit Architecture}
-\subsection{Loop Dynamics and Startup Criteria}
-The core topology is a three-stage, single-ended static CMOS inverting ring oscillator. Each stage contains a complementary PMOS pull-up and NMOS pull-down pair configured as a digital inverter, with the third stage output fed back to the first input to form the regenerative loop. To sustain autonomous periodic oscillations, the closed-loop system must satisfy the Barkhausen stability criteria at the oscillation frequency ($\omega_0$) \cite{razavi_analog}. Modeling each stage to first order as an amplifier with a low-frequency gain of $-\mathcal{A}_0$ and a dominant pole governed by node resistance ($R_{\text{node}}$) and capacitance ($C_{\text{node}}$), the single-stage transfer function is:
-\begin{equation}
-\mathcal{H}(s) = \frac{-\mathcal{A}_0}{1 + \frac{s}{\omega_p}}
+\section{Ring Oscillator Operation and Design Methodology}
+
+\subsection{Oscillation Principle and Startup Condition}
+The proposed oscillator consists of three cascaded CMOS inverter stages
+connected in a closed loop. Each stage is formed by a PMOS--NMOS pair, and the
+output of the last stage is fed back to the input of the first stage. Because the
+loop contains an odd number of inversions, the circuit is able to generate a
+self-sustained periodic signal.
+
+To maintain oscillation, the loop must satisfy the Barkhausen criterion at the
+oscillation frequency. This requires the total phase shift around the loop to
+reach $360^{\circ}$ and the loop gain to be equal to or greater than
+unity~\cite{razavi_analog}. In a three-stage ring oscillator, the inverter chain
+contributes an overall phase inversion of $180^{\circ}$, while the
+frequency-dependent phase shift provided by the stages contributes the remaining
+$180^{\circ}$ required for sustained oscillation.
+
+Assuming that all stages are identical, the oscillation frequency can be related
+to the dominant pole frequency of each stage as
+\begin{equation}\label{eq:w0_general}
+\omega_0 = \omega_p \tan\!\left(\frac{\pi}{N}\right)
 \end{equation}
-where $\omega_p = 1 / (R_{\text{node}}C_{\text{node}})$ represents the $-3\text{ dB}$ open-loop pole frequency. The total loop transfer function $\mathcal{H}_{\text{loop}}(s)$ for an $N$-stage configuration is:
-\begin{equation}
-\mathcal{H}_{\text{loop}}(s) = \left( \frac{-\mathcal{A}_0}{1 + \frac{s}{\omega_p}} \right)^N = \frac{(-1)^N \mathcal{A}_0^N}{\left(1 + \frac{s}{\omega_p}\right)^N}
+where $N$ is the number of stages and $\omega_p$ is the dominant pole frequency
+of a single stage. For the three-stage configuration used in this work ($N=3$),
+the oscillation frequency becomes
+\begin{equation}\label{eq:w0_three}
+\omega_0 = \sqrt{3}\,\omega_p
 \end{equation}
 
-For a three-stage loop ($N=3$), the DC negative feedback contributes an explicit phase shift of $\pi$ ($180^\circ$). To achieve the total loop phase shift of $2\pi$ ($360^\circ$) necessary for regenerative instability, the three frequency-dependent poles must collectively contribute an additional phase shift of $\pi$. Assuming a symmetric design, each stage contributes an equal fraction at $\omega_0$ \cite{razavi_analog}:
-\begin{equation}
-\angle \mathcal{H}(\text{j}\omega_0) = \tan^{-1}\left(\frac{\omega_0}{\omega_p}\right) = \frac{\pi}{N} = \frac{\pi}{3} = 60^\circ
+Although \eqref{eq:w0_three} provides a useful analytical relationship, the
+oscillation frequency is more conveniently expressed in terms of the propagation
+delay of each stage. For an $N$-stage ring oscillator, the oscillation frequency
+can be approximated by
+\begin{equation}\label{eq:fosc_tau}
+f_{\text{osc}} = \frac{1}{2N\tau_p}
+\end{equation}
+where $\tau_p$ denotes the average propagation delay of one stage. Since the
+propagation delay is mainly determined by the effective resistance and load
+capacitance of the inverter, it can be approximated by
+\begin{equation}\label{eq:tau_rc}
+\tau_p \approx 0.69\,R_{\text{eq}} C_{\text{tot}}
+\end{equation}
+where $R_{\text{eq}}$ is the equivalent switching resistance and $C_{\text{tot}}$
+is the total capacitance seen at the output node. Substituting \eqref{eq:tau_rc}
+into \eqref{eq:fosc_tau} gives
+\begin{equation}\label{eq:fosc_rc}
+f_{\text{osc}} \approx \frac{1}{1.38\,N R_{\text{eq}} C_{\text{tot}}}
 \end{equation}
 
-Evaluating (3) defines the exact relationship between the oscillation frequency $\omega_0$ and the single-stage pole frequency $\omega_p$:
-\begin{equation}
-\omega_0 = \omega_p \tan\left(\frac{\pi}{3}\right) = \sqrt{3}\omega_p = \frac{\sqrt{3}}{R_{\text{node}}C_{\text{node}}}
+In practical implementations, the total capacitance consists of both intrinsic
+load capacitance and parasitic capacitance introduced during physical layout.
+Therefore,
+\begin{equation}\label{eq:ctot}
+C_{\text{tot}} = C_L + C_{\text{par}}
+\end{equation}
+where $C_L$ represents the intrinsic load capacitance and $C_{\text{par}}$
+denotes the parasitic capacitance associated with interconnect routing and
+device layout. Consequently, the oscillation frequency can be rewritten as
+\begin{equation}\label{eq:fosc_par}
+f_{\text{osc}} \approx \frac{1}{1.38\,N R_{\text{eq}}\left(C_L + C_{\text{par}}\right)}
 \end{equation}
 
-Simultaneously, the loop gain magnitude must equal or exceed unity at $\omega_0$ to guarantee that initial thermal noise undergoes exponential amplification during startup \cite{lee_cmos}. Substituting (4) back into the magnitude expression defines the minimum baseline small-signal gain required per stage:
-\begin{equation}
-\frac{\mathcal{A}_0^3}{\left[\sqrt{1 + (\omega_0/\omega_p)^2}\right]^3} \ge 1 \implies \mathcal{A}_0 \ge \sqrt{1 + (\sqrt{3})^2} = 2
-\end{equation}
-Thus, an individual small-signal voltage gain of $\mathcal{A}_0 \ge 2$ is mathematically mandatory to sustain stable, periodic oscillations.
+Equation~\eqref{eq:fosc_par} shows that additional parasitic capacitance
+increases the stage delay and reduces the oscillation frequency. This effect
+becomes increasingly significant at multi-gigahertz frequencies, where
+interconnect parasitics can no longer be neglected. Therefore, accurate
+prediction of oscillator performance requires post-layout parasitic extraction
+and verification, which form the main focus of this work.
 
-\subsection{Short-Channel Propagation Delay Derivation}
-While small-signal parameters govern the onset of oscillations, the large-signal steady-state frequency is limited by the time-domain propagation delays of the inverters acting as non-linear switches \cite{razavi_rf}. The fundamental period ($T$) of an $N$-stage ring equals the total time required for a transitioning signal edge to traverse the entire loop twice:
-\begin{equation}
-T = \frac{1}{f_{\text{osc}}} = 2 N t_d
+\subsection{Short-Channel Propagation Delay Model}
+Although the startup condition of a ring oscillator can be explained using
+small-signal analysis, its steady-state oscillation frequency is primarily
+determined by the propagation delay of the inverter stages. For an $N$-stage ring
+oscillator, one complete period corresponds to the time required for a signal
+transition to propagate twice around the loop. Therefore,
+\begin{equation}\label{eq:period}
+T = \frac{1}{f_{\text{osc}}} = 2N t_d
 \end{equation}
-where $t_d$ is the single-stage propagation delay. In classical long-channel design, $t_d$ is approximated by assuming a constant average driving current charging or discharging a single lumped capacitance across a voltage swing $\Delta V \approx V_{\text{DD}}$:
-\begin{equation}
+where $t_d$ denotes the average propagation delay of a single stage.
+
+In long-channel devices, the propagation delay is commonly approximated by
+assuming a constant charging or discharging current driving a lumped node
+capacitance. Under this assumption,
+\begin{equation}\label{eq:td_long}
 t_d \approx \frac{C_{\text{node}} V_{\text{DD}}}{2 I_{\text{drive}}}
 \end{equation}
+where $C_{\text{node}}$ represents the effective node capacitance and
+$I_{\text{drive}}$ is the average switching current.
 
-However, in deep-submicron regimes like the 65~nm Low-Power (LP) CMOS process node used here, long-channel models yield highly inaccurate estimates. Intense lateral electric fields across the ultra-short nominal gate length ($L = 60\text{ nm}$) cause carrier velocity saturation ($\nu_{\text{sat}}$) and mobility degradation to dominate device profiles \cite{razavi_analog}. Under high drain-source fields, the saturated drain current ($I_{\text{sat}}$) assumes a nearly linear dependence on the gate overdrive voltage, modeled as:
-\begin{equation}
-I_{\text{sat}} = \nu_{\text{sat}} C_{\text{ox}} W \left( V_{\text{GS}} - V_{\text{th}} - V_{\text{dsat}} \right)
+However, this approximation becomes less accurate in deep-submicron technologies.
+In 65-nm CMOS devices, velocity saturation and mobility degradation limit the
+available drain current. Under strong inversion, the saturation current can be
+approximated as
+\begin{equation}\label{eq:isat}
+I_{\text{sat}} = v_{\text{sat}} C_{\text{ox}} W \left(V_{\text{GS}} - V_{\text{th}} - V_{\text{dsat}}\right)
 \end{equation}
-where $C_{\text{ox}}$ is the gate oxide capacitance per unit area, $W$ is the effective transistor channel width, $V_{\text{GS}}$ is the gate-source voltage, $V_{\text{th}}$ is the threshold voltage, and $V_{\text{dsat}}$ is the drain saturation voltage drop.
+where $v_{\text{sat}}$ is the carrier saturation velocity, $C_{\text{ox}}$ is the
+oxide capacitance per unit area, $W$ is the effective transistor width,
+$V_{\text{GS}}$ is the gate-to-source voltage, $V_{\text{th}}$ is the threshold
+voltage, and $V_{\text{dsat}}$ is the drain saturation voltage.
 
-Accounting for short-channel current restrictions during a rail-to-rail switching transition, the propagation delay $t_d$ is formulated by integrating the time-dependent current-source constraints during the high-to-low ($t_{\text{pHL}}$) and low-to-high ($t_{\text{pLH}}$) transitions:
-\begin{equation}
-t_d = \frac{t_{\text{pHL}} + t_{\text{pLH}}}{2} \approx \frac{C_{\text{node}} V_{\text{DD}}}{2 \nu_{\text{sat}} C_{\text{ox}} \left[ \left(\frac{W_n+W_p}{2}\right) (V_{\text{DD}} - V_{\text{th}} - V_{\text{dsat}}) \right]}
+By considering the average delay during both high-to-low and low-to-high
+transitions, the stage delay can be approximated by
+\begin{equation}\label{eq:td_short}
+t_d = \frac{t_{\text{pHL}} + t_{\text{pLH}}}{2}
+\approx \frac{C_{\text{node}} V_{\text{DD}}}
+{2 v_{\text{sat}} C_{\text{ox}}\left(\frac{W_n + W_p}{2}\right)\left(V_{\text{DD}} - V_{\text{th}} - V_{\text{dsat}}\right)}
 \end{equation}
 
-Equation (9) mathematically highlights that the physical operating frequency is strictly limited by the localized node capacitance $C_{\text{node}}$. In an unextracted schematic-level model, $C_{\text{node}}$ is exclusively composed of the intrinsic device capacitances ($C_{\text{intrinsic}} = C_{\text{gg}} + C_{\text{db}}$), representing the gate capacitance of the subsequent stage and the drain-bulk depletion capacitance of the driving stage.
+Equation~\eqref{eq:td_short} indicates that the oscillation frequency is strongly
+affected by the effective node capacitance. In schematic-level simulations,
+$C_{\text{node}}$ mainly consists of intrinsic device capacitances. After
+physical implementation, however, additional interconnect capacitances and
+routing parasitics contribute to the total node capacitance. Consequently,
+\begin{equation}\label{eq:cnode}
+C_{\text{node}} = C_{\text{intrinsic}} + C_{\text{par}}
+\end{equation}
+where $C_{\text{par}}$ denotes the parasitic capacitance introduced by layout
+interconnections. An increase in $C_{\text{par}}$ results in a larger propagation
+delay and therefore reduces the oscillation frequency. This effect is examined
+quantitatively through post-layout extraction in the following sections.
 
-\subsection{Idealized Pre-Layout Performance Baseline}
+\subsection{Pre-Layout Performance Baseline}
+Fig.~\ref{fig:schematic_capture} shows the schematic of the proposed three-stage
+CMOS ring oscillator. To provide a reference for evaluating the impact of layout
+parasitics, the circuit was first simulated at the schematic level using a supply
+voltage of $V_{\text{DD}} = 1.0$~V under typical-typical (TT) process conditions
+at $27^{\circ}$C. All transistors employ a channel length of 60~nm. The NMOS and
+PMOS devices are sized to $W_n = 2~\mu$m and $W_p = 4~\mu$m, respectively, to
+provide balanced drive strength.
+
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.48\textwidth]{sch.png}}
 \caption{Schematic capture of the verified three-stage static CMOS ring oscillator loop.}
 \label{fig:schematic_capture}
 \end{figure}
 
-To establish a baseline for investigating physical routing penalties, the
-proposed three-stage ring oscillator was initially simulated at the schematic
-level using a nominal supply voltage of $V_{\text{DD}} = 1.0\text{ V}$ under
-typical-typical (TT) corners at $27^\circ\text{C}$. Transistor structures
-utilize a uniform channel length of $L = 60\text{ nm}$ for all devices, with
-optimized channel widths of $W_n = 2\text{ }\mu\text{m}$ for the NMOS devices
-and $W_p = 4\text{ }\mu\text{m}$ for the PMOS devices to balance current driving
-capabilities.
-
 \begin{table}[htbp]
-\caption{Transistor Dimensions of the Three-Stage Ring Oscillator Core}
+\caption{Transistor Dimensions of the Three-Stage Ring Oscillator}
 \label{tab:transistor_sizing}
 \begin{center}
 \begin{tabular}{cccc}
 \toprule
-\textbf{Device Class} & \textbf{Model Type} & \textbf{Width ($W$)} & \textbf{Length ($L$)} \\
+\textbf{Device Class} & \textbf{Model} & \textbf{Width ($W$)} & \textbf{Length ($L$)} \\
 \midrule
-NMOS (3 devices) & \texttt{nch} & $2.0\text{ }\mu\text{m}$ & $60\text{ nm}$ \\
-PMOS (3 devices) & \texttt{pch} & $4.0\text{ }\mu\text{m}$ & $60\text{ nm}$ \\
+NMOS (3 devices) & \texttt{nch} & $2.0~\mu$m & 60~nm \\
+PMOS (3 devices) & \texttt{pch} & $4.0~\mu$m & 60~nm \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{table}
 
-Under these clean, layout-parasitic-free conditions, the intrinsic charging and
-discharging time constants are brief. The pre-layout transient simulation yields
-a high oscillation frequency of $f_{\text{osc,schematic}} = 11.15\text{ GHz}$,
-corresponding to an ultra-short total loop period of $T_{\text{schematic}} =
-89.71\text{ ps}$. Applying (6), the implied large-signal propagation delay per
-individual inverter stage evaluates to $t_{\text{d,schematic}} =
-T_{\text{schematic}} / 2N \approx 14.95\text{ ps}$. This value represents the
-physical performance ceiling of the chosen sizes, assuming ideal zero-length
-inter-stage connections.
+Under these conditions, the transient simulation produces an oscillation
+frequency of
+\begin{equation}\label{eq:fsch}
+f_{\text{osc,schematic}} = 11.15~\text{GHz}
+\end{equation}
+which corresponds to a period of
+\begin{equation}\label{eq:tsch}
+T_{\text{schematic}} = \frac{1}{f_{\text{osc,schematic}}} = 89.71~\text{ps}.
+\end{equation}
+Using \eqref{eq:period}, the average propagation delay of a single inverter stage
+can be estimated as
+\begin{equation}\label{eq:tdsch}
+t_{\text{d,schematic}} = \frac{T_{\text{schematic}}}{2N} = 14.95~\text{ps}
+\end{equation}
+for the three-stage configuration ($N=3$). These results serve as the pre-layout
+performance baseline and are later used to quantify the influence of interconnect
+parasitics extracted from the physical layout.
 
-\section{Physical Design \& Custom Layout Methodology}
+\section{Physical Design and Custom Layout Methodology}
+
 \begin{figure}[htbp]
 \centering
 \setlength{\unitlength}{1mm}
 \begin{picture}(50,85)
-    % Box 1
     \put(0,75){\framebox(50,8)[c]{\small Schematic Capture}}
     \put(25,75){\vector(0,-1){5}}
-    % Box 2
     \put(0,62){\framebox(50,8)[c]{\small Manual Layout Drawing}}
     \put(25,62){\vector(0,-1){5}}
-    % Box 3
     \put(0,49){\framebox(50,8)[c]{\small Functional DRC Verification}}
     \put(25,49){\vector(0,-1){5}}
-    % Box 4
     \put(0,36){\framebox(50,8)[c]{\small Layout-Versus-Schematic (LVS)}}
     \put(25,36){\vector(0,-1){5}}
-    % Box 5
     \put(0,23){\framebox(50,8)[c]{\small RC Parasitic Extraction (DSPF)}}
     \put(25,23){\vector(0,-1){5}}
-    % Box 6
     \put(0,10){\framebox(50,8)[c]{\small Post-Layout PSS/pnoise Sim}}
 \end{picture}
 \caption{Custom physical-design and parasitic-aware verification flow framework implemented in this work.}
 \label{fig:methodology_flow}
 \end{figure}
 
-\subsection{Device Sizing and Symmetrical Matching Strategy}
-Symmetrical driving current capability was enforced in the TSMC 65~nm LP process
-to ensure balanced rail-to-rail voltage swings. Large-signal delay components
-($t_{\text{pHL}}$ and $t_{\text{pLH}}$) depend heavily on the transistor
-on-resistance ($R_{\text{on}}$) and total output loading capacitance
-\cite{razavi_rf}. Because hole mobility ($\mu_p$) is fundamentally lower than
-electron mobility ($\mu_n$), a geometric sizing ratio of $2:1$ was locked ($W_p
-= 4\text{ }\mu\text{m}$, $W_n = 2\text{ }\mu\text{m}$). Drawn physical gate
-lengths are kept at the minimum $L = 60\text{ nm}$ to maximize current density,
-minimize intrinsic gate charge ($Q_g$), and achieve short channel transit times
-\cite{razavi_analog}. This symmetrical design balances switching transitions,
-suppressing systematic duty-cycle distortion (DCD) and reducing up-converted
-$1/f$ flicker noise contributions.
+\subsection{Device Sizing and Symmetry Considerations}
+The ring oscillator was implemented in a 65-nm Low-Power (LP) CMOS process. To
+obtain balanced rise and fall transitions, the PMOS devices were sized twice as
+wide as the NMOS devices, with $W_p = 4~\mu$m and $W_n = 2~\mu$m. This sizing
+ratio compensates for the lower hole mobility of PMOS transistors and helps
+maintain similar pull-up and pull-down drive strengths~\cite{razavi_rf}.
 
-\subsection{Floorplanning and Interconnect Routing Topology}
-The core was realized through a fully manual custom layout to preserve
-high-frequency signal integrity. The topology follows an efficient two-row
-floorplanning architecture: the three PMOS devices are aligned longitudinally in
-an upper row within a single, shared n-well island, while the three NMOS devices
-are mirrored in the lower row within the p-substrate. Grouping the PMOS devices
-eliminates separate well boundary overheads and minimizes foundry spacing rules.
-To suppress BEOL routing parasitics, all inter-stage loop feedback nets were
-routed using short, wide tracks in the lower metallization layers (Metal 1 and
-Metal 2) \cite{razavi_rf}. This bounding strategy limits via stack heights,
-preventing excess parasitic resistance from dampening loop gains. The resulting
-physical oscillator core footprint is $8.6\text{ }\mu\text{m} \times 8.6\text{
-}\mu\text{m}$, yielding a total core area of $73.96\text{ }\mu\text{m}^2$.
+All transistors employ the minimum channel length of 60~nm to maximize switching
+speed and reduce intrinsic delay~\cite{razavi_analog}. The resulting symmetric
+inverter structure improves transition balance and helps minimize duty-cycle
+distortion in the oscillation waveform.
+
+\subsection{Floorplanning and Interconnect Routing}
+A fully custom layout was used to implement the oscillator core. To simplify
+routing and maintain symmetry, the three PMOS devices were placed in the upper
+row within a common n-well, while the corresponding NMOS devices were arranged in
+the lower row. This arrangement provides a compact structure and reduces
+unnecessary routing overhead.
+
+The feedback paths between stages were routed using short interconnects primarily
+in the lower metal layers. Since the oscillator operates in the multi-gigahertz
+range, minimizing interconnect length is important to reduce parasitic resistance
+and capacitance~\cite{razavi_rf}. The final layout occupies an area of
+$8.6~\mu\text{m} \times 8.6~\mu\text{m}$, corresponding to a total core area of
+$73.96~\mu\text{m}^2$.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.42\textwidth]{layout.png}}
-\caption{Manually routed layout core showing row-aligned PMOS and NMOS device matching ($8.6\text{ }\mu\text{m} \times 8.6\text{ }\mu\text{m}$).}
+\caption{Manually routed layout core showing row-aligned PMOS and NMOS device matching ($8.6~\mu\text{m} \times 8.6~\mu\text{m}$).}
 \label{fig:layout_core}
 \end{figure}
 
-\subsection{Physical Verification: Design Rule Checking (DRC)}
-The manual cell layout underwent strict automated Design Rule Checking (DRC) to
-verify compliance with the sub-micron lithographic rules of the 65~nm process
-node. An initial Metal-1 minimum spacing violation (rule M1.S.1, min $0.09\text{
-}\mu\text{m}$) discovered along the inter-stage interconnect paths was resolved
-by re-adjusting track separations without expanding cell boundaries. The refined
-layout achieved complete functional DRC cleanliness. Remaining open flags
-reflect standard foundry layer density alerts and chip-level seal-ring rules
-(CSR and AP layers). These informational items do not impact electrical
-performance and are routinely addressed via automated dummy feature insertion
+\subsection{Design Rule Checking}
+After layout generation, Design Rule Checking (DRC) was performed to verify
+compliance with the design rules of the 65-nm CMOS process. During the initial
+verification stage, a Metal-1 spacing violation (rule M1.S.1, min
+$0.09~\mu$m) was identified and corrected by adjusting the routing geometry.
+After modification, the layout satisfied all essential DRC requirements. Some
+remaining messages were associated with density-related rules and chip-level
+layers (CSR and AP layers), which do not affect the functionality of the
+oscillator core and are routinely addressed via automated dummy-fill insertion
 during final mask assembly.
 
-\subsection{Layout-Versus-Schematic (LVS) Verification}
-To guarantee that the physical geometries drawn in the layout editor map
-directly onto the intended loop topology, a comprehensive
-Layout-Versus-Schematic (LVS) check was executed. The LVS tool cross-examined
-extracted device types, terminal pins, net connections, and transistor component
-dimensions ($W/L$) against the source schematic. LVS verification yielded a
-perfect match, confirming the total absence of shorts, opens, or device
-mismatches. This clean baseline confirms that all subsequent performance
-deviations observed during final characterization stem entirely from
-interconnect physics rather than structural coding discrepancies.
+\subsection{Layout-Versus-Schematic Verification}
+Layout-Versus-Schematic (LVS) verification was carried out to ensure consistency
+between the physical layout and the original schematic. The comparison includes
+device types, transistor dimensions, pin assignments, and net connectivity. The
+extracted layout was found to be consistent with the schematic, indicating that
+the designed topology was correctly transferred into the physical implementation.
+
+Consequently, the effects observed in the post-layout simulations can be
+attributed mainly to the parasitic elements introduced by interconnects and
+device geometries rather than connectivity errors.
+
+\section{Parasitic Extraction and Post-Layout Simulation Methodology}
+
+\subsection{RC Parasitic Extraction}
+Following DRC and LVS verification, RC parasitic extraction was performed to
+generate a Detailed Standard Parasitic Format (DSPF) netlist containing
+distributed resistance and capacitance associated with interconnects and device
+geometries~\cite{razavi_rf}. Compared with the schematic-level representation,
+the extracted netlist provides a more realistic description of the oscillator
+under practical operating conditions.
 
 \begin{table}[htbp]
-\caption{Extracted Per-Net Parasitic Capacitance Matrix from DSPF}
+\caption{Extracted Per-Net Parasitic Capacitance from DSPF}
 \label{tab:parasitic_capacitance}
 \begin{center}
 \begin{tabular}{cc}
 \toprule
 \textbf{Extracted Net Label} & \textbf{Parasitic Capacitance (fF)} \\
 \midrule
-\texttt{Out} & $4.07\text{ fF}$ \\
-\texttt{net3} & $3.54\text{ fF}$ \\
-\texttt{net5} & $3.52\text{ fF}$ \\
-\texttt{Vdd} & $3.16\text{ fF}$ \\
-\texttt{gnd} & $3.01\text{ fF}$ \\
+\texttt{Out}  & 4.07 \\
+\texttt{net3} & 3.54 \\
+\texttt{net5} & 3.52 \\
+\texttt{Vdd}  & 3.16 \\
+\texttt{gnd}  & 3.01 \\
 \bottomrule
 \end{tabular}
 \end{center}
 \end{table}
 
-\section{Parasitic-Aware Extraction \& Simulation Convergence Challenges}
+Table~\ref{tab:parasitic_capacitance} summarizes the parasitic capacitances
+associated with the major circuit nodes. The output node (\texttt{Out}) exhibits
+the largest capacitance of $4.07$~fF because of the feedback routing and external
+observation port, while the internal nodes \texttt{net3} and \texttt{net5} show
+similar capacitance values of $3.54$~fF and $3.52$~fF owing to the symmetrical
+layout arrangement. The localized power rails (\texttt{Vdd} and \texttt{gnd})
+contribute $3.16$~fF and $3.01$~fF to the substrate. These additional parasitic
+components increase the effective node loading and are expected to increase the
+propagation delay of each stage. Consequently, the oscillation frequency obtained
+from the extracted netlist is lower than that predicted by the ideal schematic
+model. The influence of these parasitic components is analyzed quantitatively in
+the following section.
 
-\subsection{Resistor-Capacitor (RC) Netlist Extraction Matrix}
-Following physical verification, back-end parasitic extraction was executed to
-generate a simulation-ready network. The extraction engine analyzed active
-interconnect layers, contact vias, and substrate boundaries to create an
-exhaustive transistor-level netlist annotated with distributed RC elements in
-Detailed Standard Parasitic Format (DSPF) \cite{razavi_rf}. 
+\subsection{Post-Layout Simulation Methodology}
+Post-layout characterization used periodic steady-state (PSS) and periodic noise
+(\texttt{pnoise}) analyses. Because the extracted DSPF netlist contains many
+distributed RC elements, the simulation settings were tuned for stable
+convergence and accurate steady-state solutions.
+The default \texttt{analogLib} \texttt{port} primitive presents a $50~\Omega$
+source/load resistance. Although this matches standard test instruments, it
+overloads an unbuffered, low-power sub-micron inverter stage, suppressing the
+loop gain below the Barkhausen criterion and extinguishing the oscillation. A
+high-impedance ($1~\text{M}\Omega$) output port was therefore used to minimize
+core loading. The PSS analysis ran in oscillator mode with sufficient
+stabilization time for the amplitude and frequency to settle before the shooting
+algorithm was applied.
+For phase noise, \texttt{pnoise} was swept over offsets from 1~kHz to 100~MHz
+using the time-average method with phase-modulation (PM) noise as the output.
+These settings yielded stable simulations and reliable extraction of oscillation
+frequency, power consumption, and phase-noise characteristics.
 
-This process isolates the parasitic loading introduced by manual routing across
-the three loop nodes. As detailed in Table II, the active output node
-(\texttt{Out}) exhibits the highest loading at $4.07\text{ fF}$, driven by the
-added trace length required for the loop feedback path and the external testing
-port. Internal nodes \texttt{net3} and \texttt{net5} display symmetrical
-parasitic capacitance baselines of $3.54\text{ fF}$ and $3.52\text{ fF}$.
-Additionally, the localized power rails (\texttt{Vdd} and \texttt{gnd}) carry
-$3.16\text{ fF}$ and $3.01\text{ fF}$ of parasitic capacitance to the substrate.
-Together, these femtofarad-scale capacitances increase the node loading,
-introducing a low-pass effect within the signal loop.
+\subsection{Phase Noise and Figure-of-Merit Evaluation}
+The phase-noise performance of the oscillator was evaluated from the
+\texttt{pnoise} simulations~\cite{hajimiri_theory, razavi_phase}. Single-sideband
+phase noise was measured at various offset frequencies relative to the carrier.
+To facilitate comparison with previously reported oscillators, the figure of
+merit (FoM) was calculated as~\cite{lee_tutorial}
+\begin{equation}\label{eq:fom}
+\text{FoM} = \mathcal{L}(\Delta f) - 20\log_{10}\!\left(\frac{f_0}{\Delta f}\right)
++ 10\log_{10}\!\left(\frac{P}{1~\text{mW}}\right)
+\end{equation}
+where $\mathcal{L}(\Delta f)$ is the single-sideband phase noise at an offset
+frequency $\Delta f$, $f_0$ denotes the oscillation frequency, and $P$ represents
+the power consumption.
 
-\subsection{The Periodic Steady-State (PSS) Convergence Solution}
-Simulating post-layout, RC-extracted oscillator netlists using Periodic
-Steady-State (PSS) and periodic noise (\texttt{pnoise}) shooting algorithms
-presents severe numerical convergence challenges. Initial configurations failed
-repeatedly, logging non-convergence errors due to a boundary condition loading
-mismatch at the output node. By default, the standard \texttt{analogLib}
-simulation \texttt{port} primitive introduces a $50\text{ }\Omega$ source/load
-resistance. While a $50\text{ }\Omega$ termination matches standard test
-instruments, it imposes an extreme load when connected directly to an
-unbuffered, low-power sub-micron CMOS inverter stage. This load severely damped
-active loop gain below the Barkhausen criterion ($\mathcal{A}_0 < 2$), causing
-an anomalous supply current draw of $19.59\text{ mA}$ while extinguishing the
-oscillation entirely.
+\section{Results and Discussion}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.45\textwidth]{sch_sim.png}
-\caption{Idealized pre-layout (schematic-level) transient output waveform demonstrating an unextracted oscillation frequency of $11.15\text{ GHz}$ ($T = 89.71\text{ ps}$).}
-\label{fig:sch_sim_wave}
-\end{figure}
-
-To resolve this limitation and force PSS convergence on the dense extracted
-netlist, the simulation parameters were re-engineered. The internal resistance
-of the output port was increased from $50\text{ }\Omega$ to a high-impedance
-threshold of $1\text{ M}\Omega$, successfully removing the AC loading penalty
-from the feedback loop. Symmetrical engine variables were optimized as follows:
-\begin{itemize}
-\item \text{Oscillator Mode Activation:} Configured with the feedback node set explicitly to the loop output (\texttt{node+ = out\_1}), matching the target beat frequency directly to the anticipated baseline.
-\item \text{Enforced Initial Conditions (IC):} An explicit voltage condition of $\text{IC} = 1.0\text{ V}$ was applied to the internal node to trigger immediate regenerative startup.
-\item \text{Stabilization Interval ($t_{\text{stab}}$):} Extended to $t_{\text{stab}} = 50\text{ ns}$ to force the transient analysis to completely settle into a stable limit cycle before calculating the shooting matrix.
-\item \text{Tolerance Preset:} Locked to \texttt{moderate} to balance numerical stability with multi-gigahertz Fourier matrix resolution.
-\end{itemize}
-
-For the subsequent \texttt{pnoise} analysis, the sweep range spanned $1\text{
-kHz}$ to $100\text{ MHz}$ relative to the moving carrier. The noise type was
-bound to \texttt{timeaverage} with noise contributions limited to phase
-modulation (\texttt{PM}), and the output probe locked directly onto the
-high-impedance external port (\texttt{oprobe = port}). This convergence
-framework eliminated anomalous current spikes, enabling stable extraction
-modeling without requiring any layout parasitic simplifications.
-
-\section{Post-Layout Simulation Results}
-
-\subsection{Post-Layout Transient Performance Profile}
-Following PSS numerical stabilization, the post-layout transient behavior of the
-RC-extracted oscillator netlist was fully characterized under a nominal
-$1.0\text{ V}$ supply rail. Fig. 5 illustrates the post-layout transient
-waveform, which exhibits stable rail-to-rail periodic oscillations with a
-voltage swing spanning $-0.05\text{ V}$ up to $1.04\text{ V}$.
+\subsection{Post-Layout Transient Characteristics}
+The post-layout transient response of the RC-extracted oscillator was
+characterized under a 1.0-V supply. Fig.~\ref{fig:layout_sim_wave} shows stable
+periodic oscillations with nearly rail-to-rail voltage swings ranging from
+approximately $-0.05$~V to $1.04$~V.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.45\textwidth]{layout_sim.png}
-\caption{Post-layout (RC-extracted) transient output waveform showing stable rail-to-rail oscillation at $6.50\text{ GHz}$ with a period of $153.84\text{ ps}$.}
+\caption{Post-layout (RC-extracted) transient output waveform showing stable rail-to-rail oscillation at 6.50~GHz with a period of 153.84~ps.}
 \label{fig:layout_sim_wave}
 \end{figure}
 
-By placing adjacent peak markers ($M_1$ and $M_2$) on the settled time grid, the physical oscillation period was measured at $t_1 = 137.77\text{ ps}$ and $t_2 = 291.61\text{ ps}$, yielding an exact period of:
-\begin{equation}
-T_{\text{post-layout}} = t_2 - t_1 = 153.84\text{ ps}
+From the steady-state waveform, the oscillation period was measured as
+\begin{equation}\label{eq:tpost}
+T_{\text{post-layout}} = 153.84~\text{ps}
 \end{equation}
-The reciprocal of this period defines the true physical operating frequency of the realized oscillator core:
-\begin{equation}
-f_{\text{osc,post-layout}} = \frac{1}{T_{\text{post-layout}}} = 6.50\text{ GHz}
+which corresponds to an oscillation frequency of
+\begin{equation}\label{eq:fpost}
+f_{\text{osc,post-layout}} = \frac{1}{T_{\text{post-layout}}} = 6.50~\text{GHz}.
+\end{equation}
+The average supply current obtained from the transient simulation was
+$286.3~\mu$A. Consequently, the power consumption of the oscillator is
+\begin{equation}\label{eq:power}
+P_{\text{dc}} = V_{\text{DD}} I_{\text{avg}} = 1.0~\text{V} \times 286.3~\mu\text{A} = 286.3~\mu\text{W}.
+\end{equation}
+Using \eqref{eq:period}, the average propagation delay of each inverter stage is
+estimated to be
+\begin{equation}\label{eq:tdpost}
+t_{\text{d,post-layout}} = \frac{T_{\text{post-layout}}}{2N} = 25.6~\text{ps}.
 \end{equation}
 
-The dynamic supply current monitored over a full cycle via the expression \texttt{average(IT("/V0/PLUS"))} confirms a stable current draw of $|I_{\text{avg}}| = 286.3\text{ }\mu\text{A}$. The total dynamic power consumption ($P_{\text{dc}}$) evaluates to:
-\begin{equation}
-P_{\text{dc}} = V_{\text{DD}} \times |I_{\text{avg}}| = 1.0\text{ V} \times 286.3\text{ }\mu\text{A} = 286.3\text{ }\mu\text{W}
-\end{equation}
-Using (6), the true large-signal propagation delay per individual inverter stage expands to $t_{\text{d,post-layout}} = T / (2N) = 25.6\text{ ps}$.
+\subsection{Effect of Layout Parasitics}
+Table~\ref{tab:pre_post} compares the pre-layout and post-layout performance. The
+oscillation frequency decreases from 11.15~GHz to 6.50~GHz after parasitic
+extraction, corresponding to a frequency reduction of approximately 41.7\%. In
+addition, the average stage delay increases from 14.95~ps to 25.6~ps, a 71.2\%
+increase. Because the transistor dimensions ($W/L$) and bias conditions remained
+identical across both setups, this degradation is driven entirely by the
+distributed RC parasitics embedded in the DSPF netlist.
 
-\subsection{Pre- vs. Post-Layout Performance Degradation Analysis}
-Direct comparisons isolate the performance penalties imposed by physical
-interconnect routing. The operating frequency drops from an unextracted
-schematic baseline of $11.15\text{ GHz}$ down to a physical limit of $6.50\text{
-GHz}$, a \text{41.7\% frequency reduction}. Because transistor aspects ($W/L$)
-and internal current baselines remained perfectly identical across both setups,
-this delay inflation is driven entirely by the distributed RC parasitics
-embedded in the DSPF netlist. This parasitic load inflates the large-signal
-stage delay from $14.95\text{ ps}$ up to $25.6\text{ ps}$, representing a
-\text{71.2\% inflation in stage delay}. This divergence underscores that
-parasitic extraction is mandatory to accurately predict timing parameters in
-multi-gigahertz nanometer layouts.
+\begin{table}[htbp]
+\caption{Pre-Layout Versus Post-Layout Performance}
+\label{tab:pre_post}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Parameter} & \textbf{Pre-Layout} & \textbf{Post-Layout} & \textbf{Change} \\
+\midrule
+Oscillation frequency & 11.15~GHz & 6.50~GHz  & $-41.7\%$ \\
+Loop period           & 89.71~ps  & 153.84~ps & $+71.5\%$ \\
+Stage delay $t_d$     & 14.95~ps  & 25.6~ps   & $+71.2\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
 
-\subsection{Spectral Purity and Figure of Merit Evaluation}
-The phase noise spectrum of the realized oscillator was characterized using the
-converged high-impedance \texttt{pnoise} simulation. As shown in Fig. 6, the
-noise curve exhibits a consistent $1/f^2$ slope across the offset spectrum,
-confirming that white thermal noise contributions dominate the high-frequency
-phase error profile \cite{hajimiri_theory, razavi_phase}.
+These differences indicate that distributed interconnect parasitics have a
+significant influence on the delay characteristics of the oscillator. The results
+highlight the importance of post-layout extraction and verification for obtaining
+realistic performance estimates in nanoscale CMOS circuits.
+
+\subsection{Phase Noise and Figure-of-Merit Performance}
+Fig.~\ref{fig:pnoise_plot} shows the simulated phase-noise spectrum of the
+oscillator. The curve exhibits a consistent $1/f^2$ slope across the offset
+spectrum, confirming that white thermal-noise contributions dominate the
+high-frequency phase-error profile~\cite{hajimiri_theory, razavi_phase}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.45\textwidth]{pnoise.png}
-\caption{Post-layout (RC-extracted) single-sideband phase noise versus relative offset frequency, showing $-77.6\text{ dBc/Hz}$ at a $1\text{ MHz}$ offset.}
+\caption{Post-layout (RC-extracted) single-sideband phase noise versus relative offset frequency, showing $-77.6$~dBc/Hz at a 1~MHz offset.}
 \label{fig:pnoise_plot}
 \end{figure}
 
-At a relative offset of $\Delta f = 1\text{ MHz}$ away from the $6.50\text{ GHz}$ carrier, the oscillator achieves a phase noise baseline of $-77.6\text{ dBc/Hz}$. At an offset of $\Delta f = 100\text{ MHz}$, the noise floor drops cleanly to $-124.3\text{ dBc/Hz}$. To evaluate performance balancing across frequency, power, and spectral purity, metrics were normalized using the standard IEEE oscillator Figure of Merit (FoM) formulation \cite{lee_tutorial}:
-\begin{equation}
-\text{FoM} = \mathcal{L}(\Delta f) - 20\log_{10}\left(\frac{f_{\text{osc}}}{\Delta f}\right) + 10\log_{10}\left(\frac{P_{\text{dc}}}{1\text{ mW}}\right)
+At an offset frequency of 1~MHz from the 6.50-GHz carrier, the single-sideband
+phase noise is
+\begin{equation}\label{eq:pn}
+\mathcal{L}(1~\text{MHz}) = -77.6~\text{dBc/Hz}.
 \end{equation}
-where $\mathcal{L}(\Delta f)$ represents the single-sideband phase noise. Substituting the extracted post-layout metrics ($\mathcal{L}(1\text{ MHz}) = -77.6\text{ dBc/Hz}$, $f_{\text{osc}} = 6.50\text{ GHz}$, and $P_{\text{dc}} = 286.3\text{ }\mu\text{W}$) into (13) provides the following evaluation:
-\begin{align}
-\text{FoM} &= -77.6 - 20\log_{10}\left(\frac{6.5\times 10^9}{1.0\times 10^6}\right) + 10\log_{10}\left(0.2863\right) \nonumber \\
-&= -77.6 - 76.26 - 5.43 = -159.3\text{ dBc/Hz}
+At an offset frequency of 100~MHz, the phase noise decreases to $-124.3$~dBc/Hz.
+Substituting the extracted post-layout metrics
+($\mathcal{L}(1~\text{MHz}) = -77.6$~dBc/Hz, $f_0 = 6.50$~GHz, and
+$P = 286.3~\mu$W) into \eqref{eq:fom} yields
+\begin{align}\label{eq:fom_eval}
+\text{FoM} &= -77.6 - 20\log_{10}\!\left(\frac{6.5\times 10^{9}}{1.0\times 10^{6}}\right)
++ 10\log_{10}\!\left(0.2863\right) \nonumber \\
+&= -77.6 - 76.26 - 5.43 = -159.3~\text{dBc/Hz}.
 \end{align}
-An FoM of $-159.3\text{ dBc/Hz}$ confirms that the compact, manually optimized physical design maintains an efficient balance between power consumption and spectral purity within the 65~nm node. It should be noted that this favorable FoM is aided by the sub-milliwatt power consumption; the absolute phase noise of $-77.6\text{ dBc/Hz}$ at $1\text{ MHz}$ is typical of an unoptimized single-ended ring oscillator and leaves room for improvement through established low-noise delay-cell techniques.
+The relatively low power consumption of $286.3~\mu$W contributes to the obtained
+FoM value. Although the phase noise is typical of a conventional single-ended
+ring oscillator, the results demonstrate that the proposed design achieves a
+reasonable trade-off among oscillation frequency, power consumption, and spectral
+purity.
 
-\subsection{Qualitative Context with Prior Art}
-A direct quantitative comparison with prior ring oscillators is not attempted
-here, since most reported designs are measured, frequency-tunable oscillators,
-whereas this work characterizes a fixed-frequency core through post-layout
-simulation. Reported CMOS ring oscillators span a wide range of technology nodes
-and tuning strategies, including current-controlled and quadrature topologies in
-0.18~$\mu$m CMOS~\cite{nugroho_ring, pokharel_quadrature}, injection-based
-designs for all-digital PLLs~\cite{edge_injection_ref13}, and current-starved
-ring VCOs targeting 5G bands~\cite{vco_65nm_ref14}. Relative to these, the
-present design is distinguished less by raw performance than by the fully
-verified, parasitic-aware methodology used to obtain its figures; the compact
-$73.96~\mu\text{m}^2$ core and $286.3~\mu$W power consumption are reported as
-simulated post-layout values rather than measured silicon.
+\subsection{Comparison with Previous Works}
+Table~\ref{tab:comparison} compares the proposed oscillator with representative
+CMOS ring oscillators reported in the literature. As the design is characterized
+by post-layout simulation, comparison with measured silicon should be treated
+with caution. Even so, the proposed oscillator attains the best figure of merit
+($-159.3$~dBc/Hz), surpassing the current-controlled RO in~\cite{nugroho_ring}
+($-154.4$~dBc/Hz), the switched-capacitor VCO in~\cite{islam_mos}
+($-155.5$~dBc/Hz), and the current-starved VCO in~\cite{anjum_csvco}
+($-152.6$~dBc/Hz). It also uses the lowest supply (1.0~V), the most compact core
+area ($73.96~\mu\text{m}^2$), and sub-milliwatt power ($286.3~\mu$W) on par with
+the lowest-power designs, while being the only one verified through a complete
+post-layout, parasitic-extracted flow. Other topologies, such as the quadrature
+design in~\cite{pokharel_quadrature}, offer additional multiphase outputs at the
+cost of more delay stages.
+
+\begin{table}[h]
+\caption{Performance Comparison with Reported CMOS Ring Oscillators}
+\label{tab:comparison}
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Parameter} & \textbf{This} & \cite{nugroho_ring} & \cite{islam_mos} & \cite{anjum_csvco} \\
+                   & \textbf{Work} & (2012) & (2017) & (2023) \\
+\midrule
+Technology        & 65~nm LP            & $0.18~\mu$m   & 90~nm      & 90~nm \\
+Topology          & 3-st.\ RO           & 3-st.\ CCO    & SC-VCO     & CS-VCO \\
+Verification      & Post-layout         & Measured      & Schematic  & Sim. \\
+Supply (V)        & 1.0                 & 1.8           & 1.8        & 1.8 \\
+Freq.\ (GHz)      & 6.50                & 5.5           & 4.52--6.02 & 5.1 \\
+Power             & $286.3~\mu$W        & $\leq 17.6$~mW & 0.295~mW  & $289~\mu$W \\
+Phase noise\textsuperscript{a} & $-77.6$ & $-104$\textsuperscript{b} & N/R & $-74$ \\
+\textbf{FoM (dBc/Hz)} & $\mathbf{-159.3}$ & $-154.4$  & $-155.5$   & $-152.6$ \\
+Area ($\mu$m$^2$) & 73.96               & 300\textsuperscript{c} & N/R & N/R \\
+\bottomrule
+\end{tabular}
+\end{center}
+\footnotesize
+\noindent RO: ring oscillator; CCO: current-controlled oscillator; SC-VCO: switched-capacitor ring VCO; CS-VCO: current-starved VCO; Sim.: schematic-level simulation; N/R: not reported. \textsuperscript{a}In dBc/Hz at 1~MHz offset unless noted. \textsuperscript{b}Reported at 4~MHz offset. \textsuperscript{c}Core area $0.0003$~mm$^2$.
+\end{table}
+
+Compared with previous studies, the main contribution of this work lies not in
+introducing a new oscillator topology, but in demonstrating a comprehensive
+methodology for physical implementation, parasitic extraction, and post-layout
+characterization of a high-frequency ring oscillator in 65-nm CMOS technology.
 
 \section{Conclusion}
-This paper presented the custom physical design, layout realization, and
-post-layout verification of a low-power three-stage CMOS ring oscillator in a
-65~nm LP CMOS baseline. By executing a manual cell floorplanning strategy, the
-core layout area was optimized down to a compact footprint of
-73.96~$\mu\text{m}^2$. Under a nominal 1.0~V supply rail, the fully extracted RC
-netlist achieved stable physical oscillations at 6.50~GHz while restricting core
-power consumption to 286.3~$\mu$W. Periodic noise simulations verified a
-single-sideband phase noise baseline of $-77.6$~dBc/Hz at a 1~MHz offset from
-the carrier, evaluating to a competitive normalized FoM of $-159.3$~dBc/Hz.
+This paper presented a comprehensive parasitic-aware post-layout design and
+verification methodology for a low-power three-stage ring oscillator implemented
+in a 65-nm Low-Power CMOS process. The proposed approach covers the complete
+design flow, including custom layout generation, physical verification, RC
+parasitic extraction, and post-layout characterization using periodic
+steady-state (PSS) and periodic noise (\texttt{pnoise}) analyses.
 
-A pre- and post-layout comparison quantified a 41.7\% frequency reduction from
-the idealized schematic baseline of 11.15~GHz, illustrating how strongly BEOL
-routing parasitics degrade deep-submicron clock trees. This performance shift
-corresponds to a 71.2\% inflation in the single-stage propagation delay
-(increasing from 14.95~ps up to 25.6~ps), indicating that schematic-level
-estimates can substantially overstate achievable performance in nanometer
-regimes. To resolve periodic steady-state (PSS) CAD convergence failures
-introduced by the dense extracted netlist, the output boundary condition was
-re-engineered by matching the external test port to a high-impedance 1~M$\Omega$
-floor. Overall, the results indicate that a fully verified, parasitic-aware
-implementation framework is important for synthesizing multi-gigahertz clock
-generation blocks in modern system-on-chip architectures.
+The extracted oscillator achieved a stable operating frequency of 6.50~GHz while
+consuming only $286.3~\mu$W from a 1.0-V supply. The phase-noise performance was
+characterized, resulting in a single-sideband phase noise of $-77.6$~dBc/Hz at a
+1-MHz offset and a corresponding figure of merit of $-159.3$~dBc/Hz, occupying a
+compact core area of $73.96~\mu\text{m}^2$.
 
-The present results are based on post-layout, parasitic-extracted simulation;
-silicon measurement is left as future work. Future extensions also include
-adding explicit frequency tuning and applying low-noise delay-cell techniques to
-improve the absolute phase noise.
+The comparison between schematic-level and post-layout simulations demonstrates
+the importance of incorporating interconnect parasitics into the design flow. The
+results show that parasitic effects have a significant influence on the delay
+characteristics and operating frequency of nanoscale CMOS oscillators,
+highlighting the need for post-layout verification to obtain realistic
+performance estimates. Overall, the proposed methodology provides a practical
+framework for the design and evaluation of low-power, multi-gigahertz oscillator
+blocks in advanced CMOS technologies. Future work will focus on experimental
+silicon validation, the addition of explicit frequency-tuning capability, and the
+application of low-noise delay-cell techniques to further improve phase-noise
+performance.
 
-\begin{thebibliography}{14}
+\begin{thebibliography}{13}
 
 \bibitem{razavi_analog}
 B.~Razavi, \emph{Design of Analog CMOS Integrated Circuits}. New York, NY, USA: McGraw-Hill, 2001.
@@ -521,35 +658,35 @@ B.~Razavi, \emph{RF Microelectronics}, 2nd~ed. Upper Saddle River, NJ, USA: Pren
 T.~H.~Lee, \emph{The Design of CMOS Radio-Frequency Integrated Circuits}, 2nd~ed. Cambridge, U.K.: Cambridge Univ. Press, 2004.
 
 \bibitem{maneatis_dll}
-J.~G.~Maneatis, ``Low-jitter process-independent DLL and PLL based on self-biased techniques,'' \emph{IEEE Journal of Solid-State Circuits}, vol.~31, no.~11, pp. 1723--1732, Nov. 1996.
+J.~G.~Maneatis, ``Low-jitter process-independent DLL and PLL based on self-biased techniques,'' \emph{IEEE J. Solid-State Circuits}, vol.~31, no.~11, pp.~1723--1732, Nov.~1996.
 
 \bibitem{maneatis_coupled}
-J.~G.~Maneatis and M.~A.~Horowitz, ``Precise delay generation using coupled oscillators,'' \emph{IEEE Journal of Solid-State Circuits}, vol.~28, no.~12, pp. 1273--1282, Dec. 1993.
+J.~G.~Maneatis and M.~A.~Horowitz, ``Precise delay generation using coupled oscillators,'' \emph{IEEE J. Solid-State Circuits}, vol.~28, no.~12, pp.~1273--1282, Dec.~1993.
 
 \bibitem{hajimiri_theory}
-A.~Hajimiri and T.~H.~Lee, ``A general theory of phase noise in electrical oscillators,'' \emph{IEEE Journal of Solid-State Circuits}, vol.~33, no.~2, pp. 179--194, Feb. 1998.
+A.~Hajimiri and T.~H.~Lee, ``A general theory of phase noise in electrical oscillators,'' \emph{IEEE J. Solid-State Circuits}, vol.~33, no.~2, pp.~179--194, Feb.~1998.
 
 \bibitem{hajimiri_ring}
-A.~Hajimiri, S.~Limotyrakis, and T.~H.~Lee, ``Jitter and phase noise in ring oscillators,'' \emph{IEEE Journal of Solid-State Circuits}, vol.~34, no.~6, pp. 790--804, Jun. 1999.
+A.~Hajimiri, S.~Limotyrakis, and T.~H.~Lee, ``Jitter and phase noise in ring oscillators,'' \emph{IEEE J. Solid-State Circuits}, vol.~34, no.~6, pp.~790--804, Jun.~1999.
 
 \bibitem{lee_tutorial}
-T.~H.~Lee and A.~Hajimiri, ``Oscillator phase noise: A tutorial,'' \emph{IEEE Journal of Solid-State Circuits}, vol.~35, no.~3, pp. 326--336, Mar. 2000.
+T.~H.~Lee and A.~Hajimiri, ``Oscillator phase noise: A tutorial,'' \emph{IEEE J. Solid-State Circuits}, vol.~35, no.~3, pp.~326--336, Mar.~2000.
 
 \bibitem{razavi_phase}
-B.~Razavi, ``A study of phase noise in CMOS oscillators,'' \emph{IEEE Journal of Solid-State Circuits}, vol.~31, no.~3, pp. 331--343, Mar. 1996.
+B.~Razavi, ``A study of phase noise in CMOS oscillators,'' \emph{IEEE J. Solid-State Circuits}, vol.~31, no.~3, pp.~331--343, Mar.~1996.
 
 \bibitem{nugroho_ring}
-P.~Nugroho, R.~K.~Pokharel, H.~Kanaya, and K.~Yoshida, ``A 5.9 GHz low power and wide tuning range CMOS current-controlled ring oscillator,'' \emph{International Journal of Electrical and Computer Engineering (IJECE)}, vol.~2, no.~3, pp. 293--300, Jun. 2012.
+P.~Nugroho, R.~K.~Pokharel, H.~Kanaya, and K.~Yoshida, ``A 5.9~GHz low power and wide tuning range CMOS current-controlled ring oscillator,'' \emph{Int. J. Electr. Comput. Eng. (IJECE)}, vol.~2, no.~3, pp.~293--300, Jun.~2012.
 
 \bibitem{pokharel_quadrature}
-R.~K.~Pokharel \emph{et al.}, ``A wide tuning range CMOS quadrature ring oscillator with improved FoM for inductorless reconfigurable PLL,'' \emph{IEICE Transactions on Electronics}, vol.~E94-C, no.~10, pp. 1524--1532, 2011.
+R.~K.~Pokharel, S.~Lingala, A.~Anand, P.~Nugroho, A.~Tomar, H.~Kanaya, and K.~Yoshida, ``A wide tuning range CMOS quadrature ring oscillator with improved FoM for inductorless reconfigurable PLL,'' \emph{IEICE Trans. Electron.}, vol.~E94-C, no.~10, pp.~1524--1532, Oct.~2011.
 
-\bibitem{edge_injection_ref13}
-``A high FoM and low phase noise edge-injection-based ring oscillator in 350 nm CMOS for sub-GHz ADPLL applications,'' \emph{Electronics}, vol.~12, no.~18, Art. no. 3769, 2023.
+\bibitem{islam_mos}
+R.~Islam, A.~N.~K.~Suprotik, S.~M.~Z.~Uddin, and M.~T.~Amin, ``Design and analysis of 3 stage ring oscillator based on MOS capacitance for wireless applications,'' in \emph{Proc. Int. Conf. Electrical, Computer and Communication Engineering (ECCE)}, Feb.~2017, pp.~723--727.
 
-\bibitem{vco_65nm_ref14}
-``A current-starved negative-skewed-delay ring-based VCO for 5G applications in 65 nm CMOS,'' \emph{Emerging Science Journal}, vol.~8, no.~1, 2024.
+\bibitem{anjum_csvco}
+N.~Anjum, V.~K.~S.~Yadav, and V.~Nath, ``Design and analysis of a low power current starved VCO for ISM band application,'' \emph{Int. J. Microsyst. IoT}, vol.~1, no.~2, pp.~82--98, 2023.
 
 \end{thebibliography}
- 
+
 \end{document}
